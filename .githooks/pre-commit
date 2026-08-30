@@ -1,0 +1,11 @@
+#!/bin/sh
+# Local-only commit guard. No online dependency, no external project required.
+PWSH="powershell.exe"
+if [ -z "$(command -v "$PWSH" 2>/dev/null)" ]; then
+  echo "PowerShell is required for this local commit check."
+  exit 1
+fi
+
+SCRIPT_DIR="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
+"$PWSH" -NoProfile -ExecutionPolicy Bypass -File "$SCRIPT_DIR/check-secrets.ps1"
+exit $?

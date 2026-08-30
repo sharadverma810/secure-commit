@@ -1,46 +1,72 @@
-# secure-commit
-Experimenting with shift-left techniques to prevent secrets (keys, passwords, tokens, etc.) from being committed in a .NET project.
+# Secure Commit
 
-## Fully local commit protection
+A practical demonstration of shift-left secret protection in developer workflows. This repository shows how to detect and block API keys, passwords, tokens, connection strings, and other sensitive values before they enter Git history.
 
-This repo uses a local-only Git hook and a PowerShell scanner. It does not require:
+## Overview
 
-- any online service
-- any remote project or package host
-- any external secret-scanning tool install
-- any cloud dependency
+Secret leaks often occur when developers accidentally commit configuration files or sample values without realizing the risk. This project implements a simple, local-only defense: detect risky content at the staged-file level, before the commit is created.
 
-### Setup
+The protection is entirely local, requires no external services, and integrates seamlessly into the standard Git workflow.
 
-From the repo root:
+## Contents
+
+- .NET 10 sample application for configuration testing
+- strong `.gitignore` patterns for secret-like files
+- local Git pre-commit hook with PowerShell scanner
+- safe validation script that proves the blocker works
+
+## How it works
+
+1. Stage files for commit with `git add`.
+2. Git invokes the local pre-commit hook automatically.
+3. PowerShell scans staged content for suspicious patterns.
+4. If patterns match, the commit is blocked with a clear message.
+5. Developer fixes the issue and retries the commit.
+
+No external services or network calls are required.
+
+## Quick start
+
+Enable the Git hooks directory:
 
 ```powershell
 git config core.hooksPath .githooks
 ```
 
-That is all you need for the default local commit check.
+Run the sample app:
 
-### How it works
+```powershell
+dotnet restore
+dotnet run
+```
 
-The hook calls the local scanner script at [.githooks/check-secrets.ps1](.githooks/check-secrets.ps1), which scans the staged git diff for common secret patterns such as:
+Test the protection safely:
 
-- `Password=...`
-- `apiKey`, `token`, `secret`
-- `ghp_...`
-- `AKIA...`
-- `BEGIN PRIVATE KEY`
-- `xoxb-...`
-- connection strings with embedded credentials
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\test-secret-scan.ps1
+```
 
-If a staged file contains a suspicious value, the commit is blocked.
+Run the scanner manually anytime:
 
-### Local test files
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\githooks\check-secrets.ps1
+```
 
-The repo includes safe demo examples under [demo-secret-leaks](demo-secret-leaks). These are intentionally excluded from the local scanner to make the repo easy to test without leaking real data.
+## Patterns detected
 
-### Recommended references
+- password and API key assignments
+- connection strings with credentials
+- tokens and bearer-style values
+- Azure and cloud connection settings
+- hardcoded application secrets in config files
 
-- Gitleaks: https://github.com/gitleaks/gitleaks
-- pre-commit-hooks: https://github.com/pre-commit/pre-commit-hooks
+## Best practices
 
-These are useful as reference sources, but this repo's active protection is intentionally self-contained and local-only.
+- Never commit real secrets to any branch.
+- Use local-only config, environment variables, or `.example` template files instead.
+- Review staged files before committing.
+- Rotate any secret that reaches the remote repository.
+
+## What this demonstrates
+
+Shift-left security means catching problems early in the developer workflow, before code reaches shared branches or production systems.

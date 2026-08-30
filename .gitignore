@@ -38,8 +38,8 @@ project.fragment.lock.json
 # ASP.NET / app config
 ScaffoldingReadMe.txt
 appsettings.*.json
-!appsettings.json
-!appsettings.Development.json.example
+!appsettings.*.example
+!appsettings.*.json.example
 
 # Secrets & environment
 .env

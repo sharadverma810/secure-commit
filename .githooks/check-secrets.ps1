@@ -45,6 +45,11 @@ foreach ($file in $stagedFiles) {
         continue
     }
 
+    # Skip example and template files (they contain placeholders, not real secrets)
+    if ($file -like '*.example' -or $file -like '*.sample' -or $file -like '*.template') {
+        continue
+    }
+
     if (-not (Test-Path $file)) {
         continue
     }

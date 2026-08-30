@@ -1,0 +1,10 @@
+{
+  "DemoApp": {
+    "ServiceName": "SecureCommitDemo",
+    "Environment": "Development",
+    "Username": "<YOUR_USERNAME>",
+    "Password": "<YOUR_PASSWORD>",
+    "ApiKey": "<YOUR_API_KEY>",
+    "ConnectionString": "Server=<YOUR_SERVER>;Database=<YOUR_DATABASE>;User Id=<YOUR_USER>;Password=<YOUR_PASSWORD>;"
+  }
+}

@@ -40,17 +40,11 @@ dotnet restore
 dotnet run
 ```
 
-Test the protection safely:
+Example of running the check-secrets protection safely:
+![assets/example-local-check-script-run.png](assets/example-local-check-script-run.png)
 
-```powershell
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\test-secret-scan.ps1
-```
-
-Run the scanner manually anytime:
-
-```powershell
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\githooks\check-secrets.ps1
-```
+Example of running the check-secrets protection with a staged file that contains a secret:
+![assets/example-secure-commit-check.png](assets/example-secure-commit-check.png)
 
 ## Patterns detected
 
